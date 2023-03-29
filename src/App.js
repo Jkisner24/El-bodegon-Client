@@ -14,6 +14,8 @@ import LoginPage from "./components/LoginComponents/LoginPage/LoginPage";
 import { useState } from "react";
 import Switch from "react-switch";
 import Dashboard from "./components/Dashboard/Dashboard";
+import UserList from "./components/Dashboard/UserList/UserList";
+import UserTable from "./components/Dashboard/UserTable/UserTable";
 
 
 function App() {
@@ -57,7 +59,7 @@ function App() {
         onLabel="Dark"
         offLabel="Light"
       />
-      {location.pathname !== "/create" && location.pathname !== "/dashboard" && <Nav />}
+      {location.pathname !== "/create" && location.pathname !== "/dashboard" && location.pathname !== "/dashboard/users" && <Nav />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/detail/:id" element={<Detail />} />
@@ -68,6 +70,8 @@ function App() {
         <Route path="/cart" element={<ShoppingCart />} />
         <Route path="/user" element={<User />} />
         <Route path="/dashboard" element={<Dashboard/>}/>
+        <Route path='/dashboard/users' element={<UserTable/>}/>
+        <Route path="/dashboard/foods" element={<foodEditor/>}/>
       </Routes>
     </div>
   );

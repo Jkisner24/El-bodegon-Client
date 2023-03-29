@@ -20,6 +20,7 @@ import {
     SET_LOCAL_CARRITO,
     GET_ALL_USERS,
     USER_LOGIN_DATA,
+    GET_AUTH0_USERS,
 
 } from '../actions/actions'
 
@@ -33,7 +34,7 @@ const initialState = {
     totalPrice:0,
     user:{},
     adminData:{},
-    userLoginData: ""
+    userLoginData: "",
 }
 
 
@@ -199,6 +200,9 @@ switch (type) {
 
     case GET_ALL_USERS:
         return {...state, adminData: {...state.adminData, users: payload}}
+    
+    case GET_AUTH0_USERS:
+        return {...state, adminData:{...state.adminData, auth0Users: payload}}
 
     default:
         return {...state}

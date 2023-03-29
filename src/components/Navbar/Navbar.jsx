@@ -71,7 +71,7 @@ export default function PrimarySearchAppBar() {
   }, [user]);
 
   useEffect(() => {
-    if (Object.entries(usuarioActual).length && user) {
+    if (user  && Object.entries(usuarioActual).length) {
       console.log(usuarioActual.cart);
       dispatch(setSavedCarrito(usuarioActual.cart));
     }

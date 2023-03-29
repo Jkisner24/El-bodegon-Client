@@ -1,5 +1,5 @@
 import axios from "axios"
-import { async } from "q"
+
 export const GET_ALLDISHES = 'GET_ALLDISHES'
 export const GET_DISH_BY_ID = 'GET_DISH_BY_ID'
 export const GET_DISHES_BY_NAME = 'GET_DISHES_BY_NAME'
@@ -13,6 +13,7 @@ export const CREATE_PAYMENT = 'CREATE_PAYMENT'
 // Auth0
 export const CREATE_NEW_AUTH0_USER = 'CREATE_NEW_AUTH0_USER'
 export const GET_AUTH0_USER_BY_ID = 'GET_AUTH0_USER_BY_ID'
+export const GET_AUTH0_USERS = 'GET_AUTH0_USERS'
 // 
 export const ADD_PRODUCT = 'ADD_PRODUCT'
 export const REMOVE_PRODUCT = 'REMOVE_PRODUCT'
@@ -84,11 +85,11 @@ export const createDish = (payload) => {
 
   try {   
     return async function () {
-      await axios.post("https://el-bodegon-api-wine.vercel.app/foods", payload
+      await axios.post("http://localhost:3001/foods", payload
       ,
        {
         headers: {
-          "Content-Type": "multipart/form-data"
+          "Content-Type": "multipart/form-data",
         }
       })
     }
@@ -102,8 +103,8 @@ export const createUser = (payload) => {
 
   try {   
     return async function () {
-      await axios.post("http://localhost:3001/users", payload)
-      // await axios.post("http://el-bodegon-api-wine.vercel.app/users", payload)
+      // await axios.post("http://localhost:3001/users", payload)
+      await axios.post("https://el-bodegon-api-wine.vercel.app/users", payload)
       // , {
       //   headers: {
       //     "Content-Type": "multipart/form-data"
@@ -119,8 +120,9 @@ export const saveCarrito = (payload) => {
   return async function (dispatch) {
     console.log(payload);
     try {
-      await axios.put(`http://localhost:3001/cart/${payload.id}`, payload.cart)
-      // await axios.put(`https://el-bodegon-api-wine.vercel.app/cart/${payload.id}`, payload.cart)
+      //funciona desde local host
+      // await axios.put(`http://localhost:3001/cart/${payload.id}`, payload.cart)
+      await axios.put(`https://el-bodegon-api-wine.vercel.app/cart/${payload.id}`, payload.cart)
       console.log("funciona");
   } catch (error) {
     console.log(error.message);
@@ -131,8 +133,9 @@ export const saveCarrito = (payload) => {
 export const setSavedCarrito = (id) => {
   return async function(dispatch) {
     try {
-      const carrito = await axios.get(`http://localhost:3001/cart/${id}`)
-      // const carrito = await axios.get(`https://el-bodegon-api-wine.vercel.app/cart/${id}`)
+      //funciona desde local host
+      // const carrito = await axios.get(`http://localhost:3001/cart/${id}`)
+      const carrito = await axios.get(`https://el-bodegon-api-wine.vercel.app/cart/${id}`)
       console.log(carrito.data.items);
       dispatch({type: SET_SAVED_CARRITO, payload: carrito.data.items})
     } catch (error) {
@@ -144,7 +147,7 @@ export const setSavedCarrito = (id) => {
 export const createPayment = (payload) => {
   try {
       return async function () {            
-        await axios.post('http://localhost:3001/payment', payload)       
+        await axios.post('https://el-bodegon-api-wine.vercel.app/payment', payload)       
         // await axios.post('https://el-bodegon-api-wine.vercel.app/payment', payload)       
         .then((res)=>window.location.href= res.data.response.body.init_point)
       }
@@ -191,21 +194,30 @@ export function setOrderings (order) {
   }
 }
 
+export function getAuth0Users () {
+  return async(dispatch)=>{
+    const auth0Users = await axios.get(`https://el-bodegon-api-wine.vercel.app/auth0Users`)
+
+    return dispatch({type: GET_AUTH0_USERS, payload: auth0Users.data})
+  }
+}
+
 export function getAuth0User(sub) {
   return async dispatch => {
     try {
-      const auth0User = await axios.get(`http://localhost:3001/auth0Users/${sub}`)
+      const auth0User = await axios.get(`https://el-bodegon-api-wine.vercel.app/auth0Users/${sub}`)
       // const auth0User = await axios.get(`https://el-bodegon-api-wine.vercel.app/auth0Users/${sub}`)
       console.log(auth0User.data[0]);
       return dispatch({type: GET_AUTH0_USER_BY_ID, payload: auth0User.data[0]})
     } catch (error) {
-      
+      console.log(error);
     }
   }
 }
 export function createAuth0User (user) {
   return async dispatch => {
     try {
+      console.log(user);
       const {name, nickname, email, sub} = user;
       const newAuth0User = {name, nickname, email, sub}
       await axios.post(`http://localhost:3001/auth0Users`, newAuth0User)
