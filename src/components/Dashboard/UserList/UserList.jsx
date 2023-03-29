@@ -2,20 +2,20 @@ import { useSelector } from "react-redux";
 import UserItem from "../UserItem/UserItem";
 
 
-const UserList = ({users, aux, setAux}) => {
+const UserList = ({users}) => {
     return(
-        <div>
+        <tbody>
             {users?.map(user =>{
                 return <UserItem
+                    id={user._id}
                     name={user.name}
                     email={user.email}
-                    pedidos={user.orders}
+                    pedidos={"5"}
                     isActive={user.is_Active} 
-                    aux={aux} 
-                    setAux={setAux}
+            
                 />
             })}
-        </div>
+        </tbody>
     )
 }
  

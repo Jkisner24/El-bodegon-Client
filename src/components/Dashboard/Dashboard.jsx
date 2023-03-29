@@ -1,49 +1,112 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUsers } from "../../redux/actions/actions";
+import { getAllUsers, getAuth0Users } from "../../redux/actions/actions";
 import UserItem from "./UserItem/UserItem";
 import UserList from "./UserList/UserList";
+import { Container, Row, Col, Card, CardGroup, Table} from 'react-bootstrap';
+import style from './Dashboard.module.css'
+import Sidebar from "./Sidebar/Sidebar";
+import GraficoLinea from "./GraficoLinea/GraficoLinea";
+import GraficoBarras from "./GraficoBarras/GraficoBarras";
+import GraficoTorta from "./GraficoTorta/GraficoTorta";
+import { Link } from "react-router-dom";
+
 
 const Dashboard = () => {
-    const adminData = useSelector(state => state.adminData)
-    const {users} = adminData
+    const users = useSelector(state => state.adminData.users)
+    const auth0Users = useSelector(state => state.adminData.auth0Users)
+    const [allUsers, setAllUsers] = useState([])
+    const [cantidadUsuarios, setCantidadUsuarios] = useState(0)
     const dispatch = useDispatch()
-    const [aux, setAux] = useState()
     useEffect(()=>{
+        dispatch(getAuth0Users())
         dispatch(getAllUsers())
+        console.log("traigousuarios");
+        console.log();
     },[])
-    useEffect(()=>{
-        console.log(users);
-        console.log(adminData);
-    },[adminData])
+    // useEffect(()=>{
+    //     const auxUsers = users.length
+    //     setCantidadUsuarios(cantidadUsuarios + auxUsers)
+    // },[users])
+  return (
+    <Container fluid>
+      <Row>
+        <Col sm={2} className="bg-light">
+          <Sidebar/>
+        </Col>
+        <Col sm={10}>
+          <Row className="my-3">
+            <Col md={4}>
+              <Card>
+                <Card.Body>
+                  <Card.Title>Ventas totales</Card.Title>
+                  <Card.Text>12</Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={4}>
+              <Card>
+                <Card.Body>
+                  <Card.Title>Productos</Card.Title>
+                  <Card.Text>112</Card.Text>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={4}>
+            <Link to ="/dashboard/users">
+              <Card>
+                <Card.Body>
+                  <Card.Title>Ver </Card.Title>
+                  <Card.Text>usuarios</Card.Text>
+                </Card.Body>
+              </Card>
+              </Link>
+            </Col>
+          </Row>
+          <Row className="my-3">
+            <Col md={8}>
+              <Card>
+                <Card.Body>
+                  <Card.Title>Chart</Card.Title>
+                  <div style={{ height: '300px' }}> {/* Height of the chart container */}
+                    {/* Chart component */}
+                    {/* <GraficoBarras/> */}
+                    <GraficoTorta/>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+            <Col md={4}>
+              <Card>
+                <Card.Body>
+                  <Card.Title>Pedidos activos</Card.Title>
+                  <div style={{ height: '300px', overflowY: 'scroll' }}> {/* Height and scrollbar of the table container */}
+                    <Table striped bordered>
+                      <thead>
+                        <tr>
+                          <th>N° pedido</th>
+                          <th>Dirección</th>
+                          <th>Monto</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>Data 1</td>
+                          <td>Data 2</td>
+                          <td>Data 3</td>
+                        </tr>
+                        {/* More rows */}
+                      </tbody>
+                    </Table>
+                  </div>
+                </Card.Body>
+              </Card>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
 
-    return (
-        // <div class="container" style={{height:"100vh",width:"100vw"}}>
-        <div style={{height:"100vh",width:"100vw"}}>
-            <h2>Dashboard</h2>
-            <div class="row h-25 justify-content-evenly bg-warning py-4">
-                <div class="col-sm-5 bg-info ">
-                    Ingresos Totales
-                </div>
-                <div class="col-sm-5 bg-info">
-                    Ingresos Mensuales
-                </div>
-            </div>
-            <div class="row h-25 justify-content-evenly bg-warning py-4">
-                <div class="col-sm-5 bg-info ">
-                    Usuarios totales
-                </div>
-                <div class="col-sm-5 bg-info">
-                    Nuevos usuarios
-                </div>
-            </div>
-            <div>
-                <h3>Lista de usuarios</h3>
-                <UserList users={users} aux={aux} setAux={setAux}/>
-            </div>
-        </div>
-        // </div>
-    )
-}
- 
 export default Dashboard;
