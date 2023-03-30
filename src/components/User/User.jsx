@@ -110,7 +110,7 @@ const User = () => {
         Swal.fire({
           position: 'center',
           icon: 'success',
-          title: `Usuario creado correctamente, se ha enviado un correo de verificación ${datosUsuario.email}`,
+          title: 'Usuario creado correctamente, se ha enviado un correo de verificación ',
           confirmButtonText: 'Aceptar',
           // showConfirmButton: true,
           timer: 5000
