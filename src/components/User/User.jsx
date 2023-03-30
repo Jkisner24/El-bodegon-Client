@@ -1,14 +1,13 @@
 import style from "./User.module.css";
 import { Carrousel } from "../Carrousel/Carrousel";
 import LoginButton from "../LoginComponents/LoginButton/LoginButton";
-import google from "../images/google.png"
+import google from "../images/google.png";
 import React from "react";
-import { createUser } from "../../redux/actions/actions";
-import { Formik, Field, Form, ErrorMessage } from "formik"
-import { useDispatch } from "react-redux"
-import * as Yup from 'yup'
+import { useState } from "react";
+import axios from "axios";
+import { validate } from "./validate";
+import Swal from "sweetalert2";
 //import { Link } from "react-router-dom";
-import Swal from "sweetalert2"
 
 const User = () => {
   const images = [
@@ -73,7 +72,78 @@ const User = () => {
         "https://res.cloudinary.com/dpbrs6n4j/image/upload/v1679583630/Fotos/Imagenes%20para%20subir%20a%20Cloudinary/Tiramisu_qljmnm.jpg",
     },
   ];
-  const dispatch = useDispatch()
+
+  const [datosUsuario, setDatosUsuario] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors]= useState({
+    /*name: "",
+    phone: "",
+    email: "",
+    password: "", */
+  })
+
+  const handleChange = (event) => {
+    setDatosUsuario({
+      ...datosUsuario,
+      [event.target.name]: event.target.value,
+    });
+    
+    setErrors(
+      validate({
+        ...datosUsuario,
+        [event.target.name]: event.target.value,
+      })
+      )
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      if (Object.keys(errors).length === 0) {
+        await axios.post("http://localhost:3001/users/create", datosUsuario)
+        Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: `Usuario creado correctamente, se ha enviado un correo de verificación ${datosUsuario.email}`,
+          confirmButtonText: 'Aceptar',
+          // showConfirmButton: true,
+          timer: 5000
+        })
+        // alert("Usuario creado correctamente");
+      } else {
+        //alert("Falta Información o falta completar campos");
+        Swal.fire({
+          title: 'Error',
+          text: 'No fue posible crear el usuario verifica bien los campos',
+          icon: 'error',
+          confirmButtonText: 'Cerrar'
+        });
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    // axios
+    //   .post("http://localhost:3001/users/create", datosUsuario)
+    //   .then((response) => console.log(response))
+    //   .catch((error) => console.log(error));
+  };
+
+  const handleClear = () => {
+    setDatosUsuario({
+      name: "",
+      phone: "",
+      email: "",
+      password: "",
+    });
+  };
+
   return (
     <div className={style.body}>
       <div class="conteiner w-5 p-5 rounded shadow" className={style.container}>
@@ -87,84 +157,98 @@ const User = () => {
               <img src="" width="48" alt=""></img>
             </div>
             <h2 class="fw-bold text-center py-5 ">Crear Cuenta</h2>
-            <Formik
-        initialValues={{
-            name:"",
-            phone: "",
-            email: "",
-            password: "",
-        }}
-        onChange={(values) =>{
-            console.log(values);
-        }}
-        onSubmit={(values, actions) => {
-            dispatch(createUser(values))
-            console.log(values);
-            // window.alert("Plato creado correctamente");
-            Swal.fire({
-              position: 'top-end',
-              icon: 'success',
-              title: 'Usuario creado correctamente',
-              showConfirmButton: false,
-              timer: 5000
-            })
-        }}
-        validationSchema = {Yup.object({
-            name: Yup.string().max(15, 'Must be 15 characters or less').required("name is required"),
-            phone: Yup.number().required("phone is required").min(10, 'Must be 10 numbers '),
-            email: Yup.string().required("Email is required").email('Invalid email address'),
-            password: Yup.string().required("password is required"),
-        })}
-        >
+            <form onSubmit={handleSubmit} class="mb-25">
+              
+              <div class="mb-4">
 
-        {({handleSubmit}) => (
-            <Form onSubmit={handleSubmit} onChange={()=>{}} className={style.formContainer}>
-                <label htmlFor="">Name:</label>
-                <Field name="name" placeholder="name" type="name"  />
-                <ErrorMessage name="name"/>
-
-                <label htmlFor="">Numero Telefonico: </label>
-                <Field name="Numero" placeholder="Numero" type="number" />
-                <ErrorMessage name="Numero"/>
-
-                <label htmlFor="">Correo Electronico:</label>
-                <Field name="email" placeholder="email"  />
-                <ErrorMessage name="email"/>
-
-                <label htmlFor="">Password:</label>
-                <Field name="password" placeholder="password"    />
-                <ErrorMessage name="password"/>
-                
+              <label htmlFor="name" class="form-label">Nombre:</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                class="form-control"
+                value={datosUsuario.name}
+                onChange={handleChange}
+                />
+                <p className={style.error}>{errors.name}</p>
+              </div>
 
 
-                
+              <div class="mb-4">
 
-                <button type="submit" className={style.button}>Create!</button>
-            {/* <Link to="/menu">
-                <button className={style.volver}>Volver</button>
-            </Link> */}
-            </Form>
-        )}
-        </Formik>
+
+              <label htmlFor="phone" class="form-label">Teléfono:</label>
+              <input
+                type="text"
+                id="phone"
+                name="phone"
+                class="form-control"
+                value={datosUsuario.phone}
+                onChange={handleChange}
+              />
+              <p className={style.error}>{errors.phone}</p>
+              
+              </div>
+
+              <div class="mb-4">
+
+              <label htmlFor="email" class="form-label">Correo electrónico:</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-control"
+                value={datosUsuario.email}
+                onChange={handleChange}
+              />
+              <p className={style.error}>{errors.email}</p>
+              {/* email */}
+              </div>
+
+              <div class="mb-4">
+
+              <label htmlFor="password" class="form-label">Contraseña:</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                class="form-control"
+                value={datosUsuario.password}
+                onChange={handleChange}
+              />
+              <p className={style.error}>{errors.password}</p>
+              {/* password */}
+              </div>
+
+              <div class="mr-4" >
+
+              <button type="submit" class="btn btn-primary" className={style.boton_Enviar}>Enviar</button>
+              <button type="button" onClick={handleClear} class="btn btn-danger" className={style.boton_Borrar} >
+                Borrar
+              </button>
+              </div>
+            </form>
             <br />
             <div class="row text-center mt-10">
-                <div class="col-12 mt-30" className={style.google}>
-                    <span>Iniciar Sesion Con:</span>
-                </div>
+              <div class="col-12 mt-30" className={style.google}>
+                <span>Iniciar Sesion Con:</span>
+                <br />
+                <br />
+              </div>
             </div>
             <div class="col-12 mt-10 ">
-                  <button class="btn btn-outline-danger w-100 my-1">
-                    <div class="row align-items-center">
-                        <br />
-                      <div class="col-1 d-none d-md-block">
-                        <img src={google} width="32" alt=""></img>
-                      </div>
-                      <div class="col-6 col-md-10 text-center">
-                        <LoginButton />
-                      </div>
-                    </div>
-                  </button>
+              <button class="btn btn-outline-danger w-100 my-1">
+                <div class="row align-items-center">
+                  <br />
+                  <div class="col-1 d-none d-md-block">
+                    <img src={google} width="32" alt=""></img>
+                  </div>
+                  <div class="col-6 col-md-10 text-center">
+                    <LoginButton />
+                  </div>
                 </div>
+              </button>
+            </div>
           </div>
         </div>
       </div>
