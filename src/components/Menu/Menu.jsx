@@ -6,7 +6,7 @@ import style from "./Menu.module.css"
 import { useDispatch } from "react-redux"
 import { useEffect, useState } from "react"
 import { useSelector } from "react-redux"
-import { getCategories, setLocalCarrito, saveCarrito } from "../../redux/actions/actions"
+import { getCategories, setLocalCarrito, saveCarrito, createAuth0User } from "../../redux/actions/actions"
 import { fontWeight } from "@mui/system"
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -41,6 +41,12 @@ const Menu = () => {
         }
         dispatch(getCategories())
     },[])
+    useEffect(()=>{
+        if(user){
+          dispatch(createAuth0User(user))
+        //   dispatch(getAuth0User(user.sub))
+        }
+      }, [user]);
 
     return (
         <div className={style.menu}>

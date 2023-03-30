@@ -1,0 +1,30 @@
+.sidebar {
+    /* width: 240px; */
+    border-right: 1px solid #dee2e6;
+  }
+  
+  .sticky {
+    position: sticky;
+    top: 0;
+    padding: 1rem;
+  }
+  
+  .nav {
+    flex-direction: column;
+  }
+  
+  .link {
+    display: flex;
+    align-items: center;
+    color: #212529;
+    padding: 0.5rem 1rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+      border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+  
+  .link:hover {
+    color: #007bff;
+    text-decoration: none;
+    background-color: #f8f9fa;
+  }
+  
