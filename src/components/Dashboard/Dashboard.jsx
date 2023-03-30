@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUsers, getAuth0Users } from "../../redux/actions/actions";
+import { getAllDishes, getAllUsers, getAuth0Users } from "../../redux/actions/actions";
 import UserItem from "./UserItem/UserItem";
 import UserList from "./UserList/UserList";
 import { Container, Row, Col, Card, CardGroup, Table} from 'react-bootstrap';
@@ -13,14 +13,15 @@ import { Link } from "react-router-dom";
 
 
 const Dashboard = () => {
-    const users = useSelector(state => state.adminData.users)
-    const auth0Users = useSelector(state => state.adminData.auth0Users)
-    const [allUsers, setAllUsers] = useState([])
-    const [cantidadUsuarios, setCantidadUsuarios] = useState(0)
+    // const users = useSelector(state => state.adminData.users)
+    // const auth0Users = useSelector(state => state.adminData.auth0Users)
+    // const [allUsers, setAllUsers] = useState([])
+    // const [cantidadUsuarios, setCantidadUsuarios] = useState(0)
     const dispatch = useDispatch()
     useEffect(()=>{
         dispatch(getAuth0Users())
         dispatch(getAllUsers())
+        dispatch(getAllDishes())
         console.log("traigousuarios");
         console.log();
     },[])
@@ -45,12 +46,14 @@ const Dashboard = () => {
               </Card>
             </Col>
             <Col md={4}>
+              <Link to ="/dashboard/foods">
               <Card>
                 <Card.Body>
                   <Card.Title>Productos</Card.Title>
                   <Card.Text>112</Card.Text>
                 </Card.Body>
               </Card>
+              </Link>
             </Col>
             <Col md={4}>
             <Link to ="/dashboard/users">

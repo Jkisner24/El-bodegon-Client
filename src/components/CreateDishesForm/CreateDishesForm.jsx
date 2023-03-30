@@ -70,7 +70,7 @@ const CreateDishesForm = () => {
                 <ErrorMessage name="image"/>
 
                 <button type="submit" className={style.button}>Create!</button>
-            <Link to="/menu">
+            <Link to="/dashboard">
                 <button className={style.volver}>Volver</button>
             </Link>
             </Form>
