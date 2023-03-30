@@ -16,6 +16,9 @@ import Switch from "react-switch";
 import Dashboard from "./components/Dashboard/Dashboard";
 import UserList from "./components/Dashboard/UserList/UserList";
 import UserTable from "./components/Dashboard/UserTable/UserTable";
+import FoodEditor from "./components/Dashboard/FoodTable/FoodTable";
+import FoodTable from "./components/Dashboard/FoodTable/FoodTable";
+import FoodUpdate from "./components/Dashboard/FoodUpdate/FoodUpdate";
 
 
 function App() {
@@ -59,19 +62,20 @@ function App() {
         onLabel="Dark"
         offLabel="Light"
       />
-      {location.pathname !== "/create" && location.pathname !== "/dashboard" && location.pathname !== "/dashboard/users" && <Nav />}
+      {!location.pathname.includes('dashboard') && <Nav />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/detail/:id" element={<Detail />} />
         <Route path="/menu" element={<Menu />} />
-        <Route path="/create" element={<CreateDishesForm />} />
         <Route path="account/login" element={<LoginPage />} />
         <Route path="account" element={<Profile />} />
         <Route path="/cart" element={<ShoppingCart />} />
         <Route path="/user" element={<User />} />
         <Route path="/dashboard" element={<Dashboard/>}/>
         <Route path='/dashboard/users' element={<UserTable/>}/>
-        <Route path="/dashboard/foods" element={<foodEditor/>}/>
+        <Route path="/dashboard/foods" element={<FoodTable/>}/>
+        <Route path="/dashboard/foods/edit/:id" element={<FoodUpdate/>}/>
+        <Route path="/dashboard/foods/create" element={<CreateDishesForm />} />
       </Routes>
     </div>
   );
