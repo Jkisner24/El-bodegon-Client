@@ -11,10 +11,6 @@ const UserTable = () => {
     const dispatch = useDispatch()
     
     useEffect(()=>{
-      console.log(auth0Users);
-      console.log(users);
-      const auxAuth0 = auth0Users
-      console.log(auxAuth0);
         let auxAllUsers = []
         auxAllUsers = [...auxAllUsers,...auth0Users]
         auxAllUsers = [...auxAllUsers, ...users]

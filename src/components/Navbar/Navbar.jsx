@@ -222,9 +222,6 @@ export default function PrimarySearchAppBar() {
           </Box>
           <h2 className={style.titleNav}>El Bodegón de Tony</h2>
           {location.pathname === "/menu" && <SearchBar />}
-          <Link to="/create">
-            <button className={style.create}>Create</button>
-          </Link>
           <Link to="/dashboard">
             <button className={style.create}>Dashboard</button>
           </Link>

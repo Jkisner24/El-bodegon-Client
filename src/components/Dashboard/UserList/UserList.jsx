@@ -1,6 +1,4 @@
-import { useSelector } from "react-redux";
 import UserItem from "../UserItem/UserItem";
-
 
 const UserList = ({users}) => {
     return(

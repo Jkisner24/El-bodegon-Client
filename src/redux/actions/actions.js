@@ -68,7 +68,6 @@ export function getAllDishes () {
 export const getDishesById = (id) => {
   return async function (dispatch) {
       const response = await axios(`https://el-bodegon-api-wine.vercel.app/foods/${id}`)
-      console.log(response.data);
       return dispatch({type: GET_DISH_BY_ID, payload: response.data})
   }
 }
@@ -79,6 +78,12 @@ export const getDishesByName = (payload) => {
         const foodsByName = await axios.get(`https://el-bodegon-api-wine.vercel.app/foods?name=${payload}`);
         return dispatch({type: GET_DISHES_BY_NAME, payload: foodsByName.data})
     }
+}
+
+export const updateDish = ({id, price, stock}) => {
+  return async function (dispatch) {
+    await axios.put(`http://localhost:3001/foods/${id}`, {price, stock})
+  }
 }
 
 export const createDish = (payload) => {
@@ -104,8 +109,8 @@ export const createUser = (payload) => {
   try {   
     return async function () {
       // await axios.post("http://localhost:3001/users", payload)
-      await axios.post("https://el-bodegon-api-wine.vercel.app/users", payload)
       // , {
+        await axios.post("https://el-bodegon-api-wine.vercel.app/users", payload)
       //   headers: {
       //     "Content-Type": "multipart/form-data"
       //   }
