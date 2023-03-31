@@ -1,16 +1,1 @@
-.container {
-  background: red;
-}
-.button1 {
-  margin: 10px;
-  border-radius: 4px;
-  width: 120px;
-  border: none;
-  padding: 15px 15px 15px 15px;
-  background: blueviolet;
-  color: white;
-  cursor: pointer;
-}
-.button1:hover {
-  background: green;
-}
+
