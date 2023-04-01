@@ -247,24 +247,29 @@ const Home = () => {
                     Enlaces Frecuentes
                   </h6>
                   <p>
-                    <a href="#!" class="text-reset">
+                    {/* <a href="#!" class="text-reset"> */}
+                    <Link to ={"/"} class="text-reset">
                       Inicio
-                    </a>
+                    </Link>
+                    
                   </p>
                   <p>
-                    <a href="#!" class="text-reset">
+                    <Link to={"/nosotros"} class="text-reset">
                       Sobre Nosotros
-                    </a>
+                    </Link>
+                    
                   </p>
                   <p>
-                    <a href="#!" class="text-reset">
+                    <Link to={"/menu"} class="text-reset">
                       Menú
-                    </a>
+                    </Link>
+                    
                   </p>
                   <p>
-                    <a href="#!" class="text-reset">
+                    <Link to={"/account/login"} class="text-reset">
                       Login
-                    </a>
+                    </Link>
+                    
                   </p>
                 </div>
                 {/* Grid column */}
@@ -274,8 +279,7 @@ const Home = () => {
                   {/* Links */}
                   <h6 class="text-uppercase fw-bold mb-4">Contactanos</h6>
                   <p>
-                    <i class="fas fa-home me-3 text-secondary"></i> New York, NY
-                    10012, US
+                    <i class="fas fa-home me-3 text-secondary"></i> Buenos Aires
                   </p>
                   <p>
                     <i class="fas fa-envelope me-3 text-secondary"></i>

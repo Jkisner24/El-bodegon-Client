@@ -20,6 +20,7 @@ import FoodEditor from "./components/Dashboard/FoodTable/FoodTable";
 import FoodTable from "./components/Dashboard/FoodTable/FoodTable";
 import FoodUpdate from "./components/Dashboard/FoodUpdate/FoodUpdate";
 import { useSelector } from "react-redux";
+import Nosotros from "./components/Nosotros/Nosotros";
 
 import ProtectRouter from "./components/ProtectRouter/ProtectRouter";
 
@@ -79,6 +80,7 @@ function App() {
         <Route path="account" element={<Profile />} />
         <Route path="/cart" element={<ShoppingCart />} />
         <Route path="/user" element={<User />} />
+        <Route path="/nosotros" element={<Nosotros />} />
 
 
         <Route path="/dashboard" element={
