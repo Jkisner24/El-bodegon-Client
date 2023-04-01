@@ -12,7 +12,7 @@ const CreateDishesForm = () => {
 
     return (
     <div className={style.mainContainer}>
-        <h1>Crear un nuevo plato</h1>
+        <h2 className={style.title}>Crear un nuevo plato</h2>
         <Formik
         initialValues={{
             name: "",
@@ -41,35 +41,45 @@ const CreateDishesForm = () => {
         }}
         validationSchema = {Yup.object({
             name: Yup.string().required("Name is required"),
-            description: Yup.string().required("description is required"),
-            price: Yup.number().required("price is required"),
-            category: Yup.string().required("category is required")
+            description: Yup.string().required("Description is required"),
+            price: Yup.number().required("Price is required"),
+            category: Yup.string().required("Category is required")
         })}
         >
 
         {({handleSubmit, setFieldValue}) => (
             <Form onSubmit={handleSubmit} onChange={()=>{}} className={style.formContainer}>
                 <label htmlFor="">Name:</label>
-                <Field name="name" placeholder="name"  />
-                <ErrorMessage name="name"/>
+                <Field name="name" className={style.controls} placeholder="Name" />
+                <div className={style.errors}>
+                <ErrorMessage name="name"  />
+                </div>
 
-                <label htmlFor="">Description:</label>
-                <Field name="description" placeholder="description"    />
+                <label htmlFor="" >Description:</label>
+                <Field name="description" className={style.controls} placeholder="Description"/>
+                <div className={style.errors}>
                 <ErrorMessage name="description"/>
+                </div>
                 
                 <label htmlFor="">Price:</label>
-                <Field name="price" placeholder="price" type="number"  />
+                <Field name="price" className={style.controls} placeholder="Price" type="number"/>
+                <div className={style.errors}>
                 <ErrorMessage name="price"/>
+                </div>
 
                 <label htmlFor="">Category: </label>
-                <Field name="category" placeholder="category"  />
+                <Field name="category" className={style.controls} placeholder="Category"/>
+                <div className={style.errors}>
                 <ErrorMessage name="category"/>
+                </div>
 
                 <label htmlFor="">Image:</label>
-                <input type="file" name="image" onChange={(e)=>setFieldValue('image', e.target.files[0])}/>
+                <input type="file" name="image" onChange={(e)=>setFieldValue('Image', e.target.files[0])}/>
+                <div className={style.errors}>
                 <ErrorMessage name="image"/>
+                </div>
 
-                <button type="submit" className={style.button}>Create!</button>
+                <button type="submit" className={style.button}>Crear!</button>
             <Link to="/dashboard">
                 <button className={style.volver}>Volver</button>
             </Link>
