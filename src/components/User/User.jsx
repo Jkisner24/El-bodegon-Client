@@ -84,6 +84,8 @@ const User = () => {
     password: "",
   });
 
+  const [formularioCompleto, setFormularioCompleto] = useState(false);
+
   const [errors, setErrors] = useState({
     /*name: "",
     phone: "",
@@ -134,6 +136,16 @@ const User = () => {
       console.error(error);
     }
 
+    setDatosUsuario({
+      name: '',
+      phone: '',
+      email: '',
+      password: '',
+    });
+
+    // Deshabilitar el botón de enviar después de enviar la solicitud POST
+    setFormularioCompleto(false);
+
     // axios
     //   .post("http://localhost:3001/users/create", datosUsuario)
     //   .then((response) => console.log(response))
@@ -147,7 +159,11 @@ const User = () => {
       email: "",
       password: "",
     });
+    setFormularioCompleto(false);
   };
+
+  // Verificar si todos los campos están llenos antes de habilitar el botón de enviar
+  const camposLlenos = Object.values(datosUsuario).every(val => val !== '');
 
   return (
     <div className={style.body}>
@@ -227,10 +243,10 @@ const User = () => {
 
               <div class="mr-4" >
 
-                <button type="submit" class="btn btn-primary" className={style.boton_Enviar}>Enviar</button>
-                <button type="button" onClick={handleClear} class="btn btn-danger" className={style.boton_Borrar} >
-                  Borrar
-                </button>
+              <button type="submit" class="btn btn-primary" disabled={!camposLlenos || formularioCompleto} className={style.boton_Enviar}>Enviar</button>
+              <button type="button" onClick={handleClear} class="btn btn-danger" className={style.boton_Borrar} >
+                Borrar
+              </button>
               </div>
             </form>
             <br />

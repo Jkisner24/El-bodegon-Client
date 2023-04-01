@@ -1,7 +1,7 @@
 .card {
   border: 10px solid rgb(235, 14, 14);
   width: 250px;
-  height: 350px;
+  height: 409px;
   border-radius: 20px;
   /* background-color: #fffbde; */
   margin: 24px;
@@ -9,6 +9,7 @@
   background-color: aliceblue;
   display: flex;
   flex-direction: column;
+  margin-bottom: -8%;
 }
 
 .card:hover {
