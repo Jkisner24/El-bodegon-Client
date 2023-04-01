@@ -19,9 +19,17 @@ import UserTable from "./components/Dashboard/UserTable/UserTable";
 import FoodEditor from "./components/Dashboard/FoodTable/FoodTable";
 import FoodTable from "./components/Dashboard/FoodTable/FoodTable";
 import FoodUpdate from "./components/Dashboard/FoodUpdate/FoodUpdate";
+import { useSelector } from "react-redux";
+
+import ProtectRouter from "./components/ProtectRouter/ProtectRouter";
+
+
 
 
 function App() {
+  const userAdmin = useSelector(state => state.userLoginData)
+
+
   const [isDarkMode, setIsDarkMode] = useState(false);
   const handleModeChange = () => {
     setIsDarkMode(!isDarkMode);
@@ -71,10 +79,18 @@ function App() {
         <Route path="account" element={<Profile />} />
         <Route path="/cart" element={<ShoppingCart />} />
         <Route path="/user" element={<User />} />
-        <Route path="/dashboard" element={<Dashboard/>}/>
-        <Route path='/dashboard/users' element={<UserTable/>}/>
-        <Route path="/dashboard/foods" element={<FoodTable/>}/>
-        <Route path="/dashboard/foods/edit/:id" element={<FoodUpdate/>}/>
+
+
+        <Route path="/dashboard" element={
+          <ProtectRouter user={userAdmin}>
+            <Dashboard />
+          </ProtectRouter>
+        } />
+
+
+        <Route path='/dashboard/users' element={<UserTable />} />
+        <Route path="/dashboard/foods" element={<FoodTable />} />
+        <Route path="/dashboard/foods/edit/:id" element={<FoodUpdate />} />
         <Route path="/dashboard/foods/create" element={<CreateDishesForm />} />
       </Routes>
     </div>

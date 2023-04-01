@@ -1,13 +1,13 @@
-import { 
-    GET_ALLDISHES, 
+import {
+    GET_ALLDISHES,
     GET_CATEGORIES,
-    SET_FLTEDDISHES, 
-    SET_ORDERINGS, 
+    SET_FLTEDDISHES,
+    SET_ORDERINGS,
     CREATE_DISH,
     CREATE_PAYMENT,
     GET_DISHES_BY_NAME,
     SET_CATEGORY,
-    CREATE_NEW_AUTH0_USER, 
+    CREATE_NEW_AUTH0_USER,
     ADD_PRODUCT,
     GET_DISH_BY_ID,
     REMOVE_PRODUCT,
@@ -21,19 +21,20 @@ import {
     GET_ALL_USERS,
     USER_LOGIN_DATA,
     GET_AUTH0_USERS,
+    LOGOUT_POSTLOGIN,
 
 } from '../actions/actions'
 
 const initialState = {
     auxAllDishes: [],
     allDishes: [],
-    detail:{},
-    categories:[],
+    detail: {},
+    categories: [],
     actualCategory: "",
-    cart:[],
-    totalPrice:0,
-    user:{},
-    adminData:{},
+    cart: [],
+    totalPrice: 0,
+    user: {},
+    adminData: {},
     userLoginData: "",
 }
 
@@ -42,171 +43,180 @@ const reducer = (state = initialState, { type, payload }) => {
     const allDishes = state.auxAllDishes
     const totalPrice = state.totalPrice
 
-switch (type) {
-    case GET_ALLDISHES:
-        return {
-           ...state,
-           allDishes: payload,
-           auxAllDishes: payload 
-        }
-
-    case USER_LOGIN_DATA:
-        return {
-            ...state,
-            userLoginData: payload
+    switch (type) {
+        case GET_ALLDISHES:
+            return {
+                ...state,
+                allDishes: payload,
+                auxAllDishes: payload
+            }
+        case LOGOUT_POSTLOGIN:
+            return {
+                ...state,
+                userLoginData: payload
+            }
+        case USER_LOGIN_DATA:
+            return {
+                ...state,
+                userLoginData: payload
             }
 
-    case GET_DISHES_BY_NAME:
-        return {
-            ...state,
-            allDishes: payload
-        }
-    case GET_DISH_BY_ID:
-        return {...state, detail: payload}
+        case GET_DISHES_BY_NAME:
+            return {
+                ...state,
+                allDishes: payload
+            }
+        case GET_DISH_BY_ID:
+            return { ...state, detail: payload }
 
-    case GET_CATEGORIES:
-        return {
-           ...state,
-           categories: payload 
-        }
-    case SET_CATEGORY:
-        return{...state, actualCategory: payload}
+        case GET_CATEGORIES:
+            return {
+                ...state,
+                categories: payload
+            }
+        case SET_CATEGORY:
+            return { ...state, actualCategory: payload }
 
-    case SET_FLTEDDISHES:
-        const fileteredDishes = payload === "all"
-            ? allDishes
-            : allDishes.filter(dish => dish.category === payload)
-            return {...state, allDishes: fileteredDishes };
+        case SET_FLTEDDISHES:
+            const fileteredDishes = payload === "all"
+                ? allDishes
+                : allDishes.filter(dish => dish.category === payload)
+            return { ...state, allDishes: fileteredDishes };
 
-    case SET_ORDERINGS:
-        let orderedDishes
-        if(payload === "any"){
-            orderedDishes = state.allDishes.sort((a,b)=>{
-                if(a._id > b._id) {return 1}
-                if(b._id > a._id) {return -1}
-                return 0 
+        case SET_ORDERINGS:
+            let orderedDishes
+            if (payload === "any") {
+                orderedDishes = state.allDishes.sort((a, b) => {
+                    if (a._id > b._id) { return 1 }
+                    if (b._id > a._id) { return -1 }
+                    return 0
                 }
-        )}
-        if(payload === "Ascendent price"){
-            orderedDishes = state.allDishes.sort((a,b)=>{
-                if(a.price > b.price) {return 1}
-                if(b.price > a.price) {return -1}
-                return 0 
+                )
+            }
+            if (payload === "Ascendent price") {
+                orderedDishes = state.allDishes.sort((a, b) => {
+                    if (a.price > b.price) { return 1 }
+                    if (b.price > a.price) { return -1 }
+                    return 0
                 }
-            )}
-        if(payload === "Descendent price"){
-            orderedDishes = state.allDishes.sort((a,b)=>{
-                if(a.price < b.price) {return 1}
-                if(b.price < a.price) {return -1}
-                return 0 
+                )
+            }
+            if (payload === "Descendent price") {
+                orderedDishes = state.allDishes.sort((a, b) => {
+                    if (a.price < b.price) { return 1 }
+                    if (b.price < a.price) { return -1 }
+                    return 0
                 }
-            )}
-        if(payload === "Ascendent rating"){
-            orderedDishes = state.allDishes.sort((a,b)=>{
-                if(a.rating > b.rating) {return 1}
-                if(b.rating > a.rating) {return -1}
-                return 0 
+                )
+            }
+            if (payload === "Ascendent rating") {
+                orderedDishes = state.allDishes.sort((a, b) => {
+                    if (a.rating > b.rating) { return 1 }
+                    if (b.rating > a.rating) { return -1 }
+                    return 0
                 }
-            )}
-        if(payload === "Descendent rating"){
-            orderedDishes = state.allDishes.sort((a,b)=>{
-                if(a.rating < b.rating) {return 1}
-                if(b.rating < a.rating) {return -1}
-                return 0 
+                )
+            }
+            if (payload === "Descendent rating") {
+                orderedDishes = state.allDishes.sort((a, b) => {
+                    if (a.rating < b.rating) { return 1 }
+                    if (b.rating < a.rating) { return -1 }
+                    return 0
                 }
-            )}
-        return {...state, allDishes: orderedDishes} 
-    
-    case ADD_PRODUCT:
-        const addProductIndex = state.cart.findIndex(item => item._id === payload._id);
-        if (addProductIndex >= 0) {
-            const newCart = state.cart
-            newCart[addProductIndex].quantity += 1
-            !state.user.name && localStorage.setItem('Cart', JSON.stringify(newCart))
-    
-            return {...state, cart: newCart}
-        } else {
-            payload.quantity = 1
-            const newCart = [...state.cart, payload]
-            state.cart = newCart
+                )
+            }
+            return { ...state, allDishes: orderedDishes }
 
-            !state.user.name && localStorage.setItem('Cart', JSON.stringify(newCart))
-                
-            return {...state, cart: newCart}
-        }
-    
-    case REMOVE_PRODUCT:
-        const removeProductIndex = state.cart.findIndex(item => item._id === payload._id)
-
-        if(removeProductIndex >= 0) {
-            if(state.cart[removeProductIndex].quantity >= 2){
+        case ADD_PRODUCT:
+            const addProductIndex = state.cart.findIndex(item => item._id === payload._id);
+            if (addProductIndex >= 0) {
                 const newCart = state.cart
-                newCart[removeProductIndex].quantity -= 1;
-
+                newCart[addProductIndex].quantity += 1
                 !state.user.name && localStorage.setItem('Cart', JSON.stringify(newCart))
-                    
-                return {...state, cart: newCart} 
+
+                return { ...state, cart: newCart }
             } else {
-                const newCart = state.cart.filter(item => item._id !== payload._id);
-        
+                payload.quantity = 1
+                const newCart = [...state.cart, payload]
+                state.cart = newCart
+
                 !state.user.name && localStorage.setItem('Cart', JSON.stringify(newCart))
-                    
-                return {...state, cart: newCart}
+
+                return { ...state, cart: newCart }
             }
-        } else {
-            return {...state}
-        }
 
-    case REMOVE_ALL_PRODUCTS:
-        !state.user.name && localStorage.setItem('Cart', JSON.stringify([]))
-        return {...state, cart: [], totalPrice: 0}
-    
-    case REMOVE_MANY_PRODUCTS:
-        const reduce_price = payload.price * payload.quantity
-        const newCart = state.cart.filter(item => item._id !== payload._id);
-        !state.user.name && localStorage.setItem('Cart', JSON.stringify(newCart))
-        return {...state, cart: newCart, totalPrice: totalPrice - reduce_price}
+        case REMOVE_PRODUCT:
+            const removeProductIndex = state.cart.findIndex(item => item._id === payload._id)
 
-    case ADD_TOTAL_PRICE:
-        const addedPrice = payload.price
-        return {...state, totalPrice: totalPrice + addedPrice}
-    
-    case REDUCE_TOTAL_PRICE:
-        const reducePrice = payload.price
-        if(state.totalPrice > 0){
-            return {...state, totalPrice: totalPrice - reducePrice}
-        } else {
-            return {...state}
-        }
-    
-    case SET_LOCAL_CARRITO:
-        console.log({esteeselcarrito: payload});
-        return {...state, cart: payload}
+            if (removeProductIndex >= 0) {
+                if (state.cart[removeProductIndex].quantity >= 2) {
+                    const newCart = state.cart
+                    newCart[removeProductIndex].quantity -= 1;
 
-    case GET_AUTH0_USER_BY_ID:
-        return {...state, user: payload}
+                    !state.user.name && localStorage.setItem('Cart', JSON.stringify(newCart))
 
-    case CREATE_PAYMENT:
-        return {...state}
+                    return { ...state, cart: newCart }
+                } else {
+                    const newCart = state.cart.filter(item => item._id !== payload._id);
 
-    case CREATE_DISH:
-        return {...state}    
+                    !state.user.name && localStorage.setItem('Cart', JSON.stringify(newCart))
 
-    case CREATE_NEW_AUTH0_USER:
-        return {...state}
+                    return { ...state, cart: newCart }
+                }
+            } else {
+                return { ...state }
+            }
 
-    case SET_SAVED_CARRITO:
-        return {...state, cart: payload}
+        case REMOVE_ALL_PRODUCTS:
+            !state.user.name && localStorage.setItem('Cart', JSON.stringify([]))
+            return { ...state, cart: [], totalPrice: 0 }
 
-    case GET_ALL_USERS:
-        return {...state, adminData: {...state.adminData, users: payload}}
-    
-    case GET_AUTH0_USERS:
-        return {...state, adminData:{...state.adminData, auth0Users: payload}}
+        case REMOVE_MANY_PRODUCTS:
+            const reduce_price = payload.price * payload.quantity
+            const newCart = state.cart.filter(item => item._id !== payload._id);
+            !state.user.name && localStorage.setItem('Cart', JSON.stringify(newCart))
+            return { ...state, cart: newCart, totalPrice: totalPrice - reduce_price }
 
-    default:
-        return {...state}
-}
+        case ADD_TOTAL_PRICE:
+            const addedPrice = payload.price
+            return { ...state, totalPrice: totalPrice + addedPrice }
+
+        case REDUCE_TOTAL_PRICE:
+            const reducePrice = payload.price
+            if (state.totalPrice > 0) {
+                return { ...state, totalPrice: totalPrice - reducePrice }
+            } else {
+                return { ...state }
+            }
+
+        case SET_LOCAL_CARRITO:
+            console.log({ esteeselcarrito: payload });
+            return { ...state, cart: payload }
+
+        case GET_AUTH0_USER_BY_ID:
+            return { ...state, user: payload }
+
+        case CREATE_PAYMENT:
+            return { ...state }
+
+        case CREATE_DISH:
+            return { ...state }
+
+        case CREATE_NEW_AUTH0_USER:
+            return { ...state }
+
+        case SET_SAVED_CARRITO:
+            return { ...state, cart: payload }
+
+        case GET_ALL_USERS:
+            return { ...state, adminData: { ...state.adminData, users: payload } }
+
+        case GET_AUTH0_USERS:
+            return { ...state, adminData: { ...state.adminData, auth0Users: payload } }
+
+        default:
+            return { ...state }
+    }
 }
 
 export default reducer

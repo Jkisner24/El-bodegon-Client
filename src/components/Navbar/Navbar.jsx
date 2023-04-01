@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createAuth0User, getAllDishes, getAuth0User, setSavedCarrito, saveCarrito} from "../../redux/actions/actions";
+import { createAuth0User, getAllDishes, getAuth0User, setSavedCarrito, saveCarrito, logoutPostLogin } from "../../redux/actions/actions";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
@@ -24,14 +24,15 @@ import logoMini from "../../assets/logomini.png";
 import LoginButton from "../LoginComponents/LoginButton/LoginButton";
 import LogoutButton from "../LoginComponents/LogoutButton/LogoutButton";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Link, useFetcher, useLocation } from "react-router-dom";
+import { Link, useFetcher, useLocation, useNavigate } from "react-router-dom";
 import style from "./Navbar.module.css";
 import SearchBar from "./SearchBar";
-import {AiOutlineUser, AiOutlineShoppingCart} from "react-icons/ai"
+import { AiOutlineUser, AiOutlineShoppingCart } from "react-icons/ai"
 import { useState } from "react";
 import El_Bodegon_de_Tony from "../images/El_Bodegon_de_Tony.png"
+import { FaRegUserCircle } from "react-icons/fa";
 
-
+import { Nav, NavDropdown } from "react-bootstrap";
 
 
 export default function PrimarySearchAppBar() {
@@ -44,39 +45,49 @@ export default function PrimarySearchAppBar() {
   const usuarioActual = useSelector(state => state.user)
   const userLogged = useSelector(state => state.user)
   const cart = useSelector(state => state.cart)
-  const [aux, setAux]=useState(0)
-  const location =useLocation()
+  const [aux, setAux] = useState(0)
+  const location = useLocation()
+
+  const userLogin = useSelector(state => state.userLoginData);
 
 
-  useEffect(()=>{
+  const navigate = useNavigate();
+  function logout() {
+    dispatch(logoutPostLogin(""))
+    navigate("/user")
+  }
+
+
+  useEffect(() => {
     handleSaveCarrito(cart)
     console.log("pasoxuseeffect");
-  },[cart])
-  
+  }, [cart])
+
+
   const handleSaveCarrito = (cart) => {
-          if(userLogged){
-            setAux(aux + 1)
-            console.log(userLogged.sub)
-            console.log(cart)
-            dispatch(saveCarrito({cart, id: userLogged.sub}))
-          } else {
-            alert("login")
-          }
-        }
-  useEffect(()=>{
-    if(user){
+    if (userLogged) {
+      setAux(aux + 1)
+      console.log(userLogged.sub)
+      console.log(cart)
+      dispatch(saveCarrito({ cart, id: userLogged.sub }))
+    } else {
+      alert("login")
+    }
+  }
+  useEffect(() => {
+    if (user) {
       dispatch(createAuth0User(user))
       dispatch(getAuth0User(user.sub))
     }
   }, [user]);
 
   useEffect(() => {
-    if (user  && Object.entries(usuarioActual).length) {
+    if (user && Object.entries(usuarioActual).length) {
       console.log(usuarioActual.cart);
       dispatch(setSavedCarrito(usuarioActual.cart));
     }
   }, [usuarioActual]);
-  
+
   // useEffect(() => {
   //   if(Object.entries(usuarioActual).length){
   //     console.log(usuarioActual.cart);
@@ -87,7 +98,7 @@ export default function PrimarySearchAppBar() {
 
   useEffect(() => {
     dispatch(getAllDishes());
-    
+
   }, []);
 
   const handleProfileMenuOpen = (event) => {
@@ -211,7 +222,7 @@ export default function PrimarySearchAppBar() {
               padding: "10px"
             }}
           >
-            <Link to="/"><button className={style.buttonLogo}><img src={El_Bodegon_de_Tony} alt="Logo" className={style.logo}/></button></Link>
+            <Link to="/"><button className={style.buttonLogo}><img src={El_Bodegon_de_Tony} alt="Logo" className={style.logo} /></button></Link>
             <Typography
               variant="h6"
               noWrap
@@ -222,9 +233,21 @@ export default function PrimarySearchAppBar() {
           </Box>
           <h2 className={style.titleNav}>El Bodegón de Tony</h2>
           {location.pathname === "/menu" && <SearchBar />}
-          <Link to="/dashboard">
-            <button className={style.create}>Dashboard</button>
+
+          <Link to="/dashboard" style={{ textDecoration: 'none' }}>
+            <a class="nav-link active" aria-current="page" className={style.aNav}>Dashboard</a>
           </Link>
+
+          <Link to="/menu" style={{ textDecoration: 'none' }}>
+            <a class="nav-link active" aria-current="page" className={style.aNav}>Menu</a>
+          </Link>
+
+          <Link to="/nosotros" style={{ textDecoration: 'none' }}>
+            <a class="nav-link active" aria-current="page" className={style.aNav}>Nosotros</a>
+          </Link>
+
+
+
           {/* Box para ocupar espacio */}
           <Box sx={{ flexGrow: 1 }} />
 
@@ -249,13 +272,21 @@ export default function PrimarySearchAppBar() {
             </IconButton> */}
 
 
-      {!isAuthenticated ? <Link to='/account/login'><AiOutlineUser className={style.login}/></Link> : <><p>Bienvenido {user.nickname}!</p> <LogoutButton/></> }
+            {/* <button>{userLogin.name}</button> */}
+
+            <Nav>
+              <NavDropdown title={userLogin && userLogin.name}>
+                <NavDropdown.Item onClick={logout} >logout</NavDropdown.Item>
+              </NavDropdown>
+            </Nav>
+
+            {!isAuthenticated ? <Link to='/account/login'><AiOutlineUser className={style.login} /></Link> : <><p>Bienvenido {user.nickname}!</p> <LogoutButton /></>}
 
             {/* icono usuario */}
-            {!isAuthenticated? "" :
-            <Link to='account'><img className={style.userPicture} src={user.picture} alt={user.name}/></Link>
+            {!isAuthenticated ? "" :
+              <Link to='account'><img className={style.userPicture} src={user.picture} alt={user.name} /></Link>
             }
-            <Link to='cart'><AiOutlineShoppingCart className={style.cart}/></Link>
+            <Link to='cart'><AiOutlineShoppingCart className={style.cart} /></Link>
           </Box>
 
           {/* Menu responsive */}
