@@ -1,7 +1,7 @@
 import style from "./LoginPage.module.css";
 import LoginButton from "../LoginButton/LoginButton";
 import { Carrousel } from "../../Carrousel/Carrousel";
-import { Link, useNavigate, } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 
 import facebook from "../../images/facebook.png";
@@ -105,17 +105,24 @@ const LoginPage = () => {
     e.preventDefault();
     let resultado = await dispatch(postLogin(input))
     /*     console.log(resultado.error) */
-    if (resultado.error === "valid email correct password") navigate("/menu")
+    if (resultado.error === "valid email correct password") {
+      if (resultado.user.email === "admin@admin.com") {
+        navigate("/dashboard")
+      } else {
+        navigate("/menu")
+      }
+    }
+    /* navigate("/dashboard") */
     if (resultado.error === "Invalid email") Swal.fire({
       icon: 'error',
       title: 'El bodegon de Tony',
-      text: resultado.error + ':🚨  try again 🤙🏻',
+      text: resultado.error + ':🚨 try again 🚨 ',
       footer: '<a href="">Forgot my email??</a>'
     })
     if (resultado.error === "Invalid password") Swal.fire({
       icon: 'error',
       title: 'El bodegon de Tony',
-      text: resultado.error + ':🚨  try again 🤙🏻',
+      text: resultado.error + ':🚨 try again 🚨',
       footer: '<a href="">Forgot my password??</a>'
     })
     setinput({

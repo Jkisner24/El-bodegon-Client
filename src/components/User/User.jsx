@@ -9,6 +9,8 @@ import { validate } from "./validate";
 import Swal from "sweetalert2";
 //import { Link } from "react-router-dom";
 
+import { Link, useNavigate } from "react-router-dom";
+
 const User = () => {
   const images = [
     {
@@ -73,6 +75,8 @@ const User = () => {
     },
   ];
 
+  const navigate = useNavigate();
+
   const [datosUsuario, setDatosUsuario] = useState({
     name: "",
     phone: "",
@@ -80,7 +84,7 @@ const User = () => {
     password: "",
   });
 
-  const [errors, setErrors]= useState({
+  const [errors, setErrors] = useState({
     /*name: "",
     phone: "",
     email: "",
@@ -92,13 +96,13 @@ const User = () => {
       ...datosUsuario,
       [event.target.name]: event.target.value,
     });
-    
+
     setErrors(
       validate({
         ...datosUsuario,
         [event.target.name]: event.target.value,
       })
-      )
+    )
   };
 
   const handleSubmit = async (event) => {
@@ -115,6 +119,7 @@ const User = () => {
           // showConfirmButton: true,
           timer: 5000
         })
+        navigate("/account/login")
         // alert("Usuario creado correctamente");
       } else {
         //alert("Falta Información o falta completar campos");
@@ -158,17 +163,17 @@ const User = () => {
             </div>
             <h2 class="fw-bold text-center py-5 ">Crear Cuenta</h2>
             <form onSubmit={handleSubmit} class="mb-25">
-              
+
               <div class="mb-4">
 
-              <label htmlFor="name" class="form-label">Nombre:</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                class="form-control"
-                value={datosUsuario.name}
-                onChange={handleChange}
+                <label htmlFor="name" class="form-label">Nombre:</label>
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  class="form-control"
+                  value={datosUsuario.name}
+                  onChange={handleChange}
                 />
                 <p className={style.error}>{errors.name}</p>
               </div>
@@ -177,55 +182,55 @@ const User = () => {
               <div class="mb-4">
 
 
-              <label htmlFor="phone" class="form-label">Teléfono:</label>
-              <input
-                type="text"
-                id="phone"
-                name="phone"
-                class="form-control"
-                value={datosUsuario.phone}
-                onChange={handleChange}
-              />
-              <p className={style.error}>{errors.phone}</p>
-              
+                <label htmlFor="phone" class="form-label">Teléfono:</label>
+                <input
+                  type="text"
+                  id="phone"
+                  name="phone"
+                  class="form-control"
+                  value={datosUsuario.phone}
+                  onChange={handleChange}
+                />
+                <p className={style.error}>{errors.phone}</p>
+
               </div>
 
               <div class="mb-4">
 
-              <label htmlFor="email" class="form-label">Correo electrónico:</label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                class="form-control"
-                value={datosUsuario.email}
-                onChange={handleChange}
-              />
-              <p className={style.error}>{errors.email}</p>
-              {/* email */}
+                <label htmlFor="email" class="form-label">Correo electrónico:</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  class="form-control"
+                  value={datosUsuario.email}
+                  onChange={handleChange}
+                />
+                <p className={style.error}>{errors.email}</p>
+                {/* email */}
               </div>
 
               <div class="mb-4">
 
-              <label htmlFor="password" class="form-label">Contraseña:</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                class="form-control"
-                value={datosUsuario.password}
-                onChange={handleChange}
-              />
-              <p className={style.error}>{errors.password}</p>
-              {/* password */}
+                <label htmlFor="password" class="form-label">Contraseña:</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  class="form-control"
+                  value={datosUsuario.password}
+                  onChange={handleChange}
+                />
+                <p className={style.error}>{errors.password}</p>
+                {/* password */}
               </div>
 
               <div class="mr-4" >
 
-              <button type="submit" class="btn btn-primary" className={style.boton_Enviar}>Enviar</button>
-              <button type="button" onClick={handleClear} class="btn btn-danger" className={style.boton_Borrar} >
-                Borrar
-              </button>
+                <button type="submit" class="btn btn-primary" className={style.boton_Enviar}>Enviar</button>
+                <button type="button" onClick={handleClear} class="btn btn-danger" className={style.boton_Borrar} >
+                  Borrar
+                </button>
               </div>
             </form>
             <br />
@@ -235,6 +240,9 @@ const User = () => {
                 <br />
                 <br />
               </div>
+              <Link to="/account/login">
+                <button type="button" class="btn btn-link">Ir a login</button>
+              </Link>
             </div>
             <div class="col-12 mt-10 ">
               <button class="btn btn-outline-danger w-100 my-1">
